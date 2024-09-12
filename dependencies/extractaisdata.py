@@ -23,5 +23,5 @@ with open(r'C:\Users\Thunder\Downloads\decoded_data.csv') as csvfile:
     reader = csv.DictReader(csvfile)
     create_type_a_table()
     insert_data_type_a(reader)
-    #create_data_table()
-    #insert_data(reader)
+    # create_data_table()
+    # insert_data(reader)

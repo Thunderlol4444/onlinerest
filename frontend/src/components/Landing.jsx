@@ -2,16 +2,7 @@ import React, {useContext, useEffect} from 'react';
 import {access_token_context} from "../App";
 import "../App.css"
 import {
-    Button,
-    Table,
-    Thead,
-    Tbody,
-    Tfoot,
-    Tr,
-    Th,
-    Td,
-    TableCaption,
-    TableContainer, Input, Text,
+    Button, Input, Text,
 } from "@chakra-ui/react";
 import {Navigate} from "react-router-dom";
 import Ais from './Ais'

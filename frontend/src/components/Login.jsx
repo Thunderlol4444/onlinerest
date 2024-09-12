@@ -35,7 +35,7 @@ export default function Login() {
         .then(data => {
             if (data.access_token) {
                 setToken(data.access_token);
-                localStorage.setItem("access_token", data.access_token); // Save the token in localStorage
+                localStorage.setItem("access_token", access_token); // Save the token in localStorage
                 console.log(localStorage.getItem("access_token"));
                 setLoginFailed(false);
                 navigate("/landing"); // Navigate to the landing page
@@ -65,7 +65,7 @@ export default function Login() {
                 {loginFailed===true && (
                     <Text color="red" mt={4}>Login failed. Please retry.</Text> // Conditionally render the retry message
                 )}
-                <Text pt="5" fontSize="medium" pt="5">New Account?<Link href="/register" color="teal.300" fontSize="medium" pt="5" > Register</Link>
+                <Text pt="5" fontSize="medium">New Account?<Link href="/register" color="teal.300" fontSize="medium" pt="5" > Register</Link>
                 </Text>
 
             </div>

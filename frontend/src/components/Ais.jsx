@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import "../App.css"
 import { MapContainer, TileLayer, Marker, Popup} from "react-leaflet";
 import 'leaflet/dist/leaflet.css';
-import {foodIcon} from "./Icons";
+import {shipIcon} from "./Icons";
 import {vesselType, status, manoeuverIndicator, positionAccuracy, RAIMFlag, checkHeading} from "./AisCode";
 import 'leaflet-rotatedmarker'
 
@@ -24,7 +24,7 @@ export default function Ais() {
             method: "get",
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("access_token")}`,},
-        })
+        }).then()
         setData(await data.json());
         console.log(responseData);
     }
@@ -67,8 +67,8 @@ export default function Ais() {
                     <Marker
                         key={index}
                         position={[vessel.latitude, vessel.longitude]}
-                        icon={foodIcon}
-                        rotationAngle={vessel.true_heading}
+                        icon={shipIcon}
+                        rotationAngle={Number(vessel.true_heading)-45}
                     >
                         <Popup>
                             <b>Time stamp: {vessel.time_stamp} seconds</b><br/>
@@ -80,7 +80,7 @@ export default function Ais() {
                             <b>Longitude: {vessel.longitude} degrees</b><br/>
                             <b>Latitude: {vessel.latitude} degrees</b><br/>
                             <b>Course over ground: {vessel.course_over_ground} degrees</b><br/>
-                            <b>True heading: {vessel.true_heading} degrees</b><br/>
+                            <b>True heading: {(vessel.true_heading)} degrees</b><br/>
                             <b>Manoeuver indicator: {vessel.manoeuver_indicator}</b><br/>
                             <b>RAIM flag: {vessel.RAIM_flag}</b><br/>
                             <b>Radio status: {vessel.radio_status}</b><br/>
