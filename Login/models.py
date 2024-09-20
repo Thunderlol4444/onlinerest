@@ -20,7 +20,7 @@ class TokenSchema(BaseModel):
 
 class ChangePassword(BaseModel):
     email: str
-    old_password: str
+    # old_password: str
     new_password: str
 
 
@@ -30,3 +30,8 @@ class TokenCreate(BaseModel):
     refresh_token: str
     status: bool
     created_date: datetime.datetime
+
+
+class EmailVerification(BaseModel):
+    email: str
+    name: str

@@ -52,6 +52,7 @@
   position: relative;
   padding: 10px;
   border: 1px solid #fff;
+  color: white;
   margin-bottom: 10px;
   margin-top: 10px;
 }
@@ -151,4 +152,52 @@
 /* Apply backdrop blur effect */
 .popup-container {
   backdrop-filter: blur(5px);
+}
+.pinBox {
+  --width: 296px;
+  --height: 74px;
+  --spacing: 47px;
+
+  display: inline-block;
+  position: relative;
+  width: var(--width);
+  height: var(--height);
+  background-image: url(https://i.sstatic.net/JbkZl.png);
+}
+
+input[type=text] {
+  position: absolute;
+  padding-left: 21px;
+  font-family: courier, monospaced;
+  font-size: var(--spacing);
+  height: var(--height);
+  letter-spacing: var(--spacing);
+  background: repeating-linear-gradient(90deg,
+      dimgrey 0, dimgrey 1ch,
+      transparent 0, transparent 2.65ch)
+      0 100%/ 10ch 2px no-repeat;
+  background-position: 7% 90%;
+  border: 0;
+  outline: none;
+  clip: rect(0px, calc(var(--width) - 21px), var(--height), 0px);
+}
+
+.forget-button {
+  font-size: small;
+  margin: 5px;
+}
+
+.form-change-password{
+  text-align: center;
+  position: relative;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: medium;
+  background-color: #282c34;
+  min-height: 100vh;
+  height: 100%;
+  width: 100%;
 }

@@ -35,8 +35,7 @@ export default function Login() {
         .then(data => {
             if (data.access_token) {
                 setToken(data.access_token);
-                localStorage.setItem("access_token", access_token); // Save the token in localStorage
-                console.log(localStorage.getItem("access_token"));
+                localStorage.setItem("access_token", data.access_token); // Save the token in localStorage
                 setLoginFailed(false);
                 navigate("/landing"); // Navigate to the landing page
             } else {
@@ -62,6 +61,7 @@ export default function Login() {
                     <input type="password" className="form-control" id="pwd" onChange={handleChange} value={formData.password} name="password"/>
                 </form>
                 <Button colorScheme="blue" type="submit" form="login" size="sm">Submit</Button>
+                <a href="/change-password" className="forget-button">Forget password?</a>
                 {loginFailed===true && (
                     <Text color="red" mt={4}>Login failed. Please retry.</Text> // Conditionally render the retry message
                 )}

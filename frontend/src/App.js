@@ -7,6 +7,7 @@ import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Logout from "./components/Logout";
 import Register from "./components/Register";
+import ChangePassword from "./components/ChangePassword";
 
 export const access_token_context = React.createContext("")
 
@@ -20,6 +21,7 @@ function App() {
                     <Route path='/landing' element={<ProtectedRoute><Landing /></ProtectedRoute>} /> //use element instead of component
                     <Route path='/logout' element={<ProtectedRoute><Logout /></ProtectedRoute>} />
                     <Route path="/register" Component={Register} />
+                    <Route path="/change-password" Component={ChangePassword} />
                 </Routes>
             </Router>
         </access_token_context.Provider>

@@ -38,8 +38,6 @@ export default function Landing() {
                     },
                 })
                 setDatas(await response.json());
-                console.log(datas[0]);
-                console.log(typeof datas)
             }
             getdata()
         }

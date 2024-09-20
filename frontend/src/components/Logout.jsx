@@ -4,7 +4,6 @@ import {useNavigate} from "react-router-dom";
 import {Box, Text, Collapse, Fade} from "@chakra-ui/react";
 
 export default function Logout() {
-    console.log(`Bearer ${localStorage.getItem("access_token")}`)
     const navigate = useNavigate();
     const [output, setOutput] = React.useState(null);
     const [fade, setFade] = React.useState(true);

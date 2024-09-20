@@ -1,3 +1,4 @@
+import random
 from functools import wraps
 from fastapi import Depends, HTTPException, status,  Response, APIRouter
 from dependencies.database import get_database_connection
@@ -7,6 +8,8 @@ from .auth_bearer import JWTBearer
 from time import time
 import os
 import signal
+# from .emailverificatiion import *
+from .emailXauth import send_email
 
 router: APIRouter = APIRouter()
 
@@ -62,6 +65,40 @@ def register_user(user: models.UserCreate = Depends()):
     cursor.close()
     connection.close()
     return {"message": "user created successfully"}
+
+
+@router.post("/register/email_verification")
+def register_email_verification(new_user: models.EmailVerification = Depends()):
+    # GOOGLE_CLIENT_ID = '1022384984816-tt725bcu2u0bb3onjcmj4o0eedk1kjpn.apps.googleusercontent.com'
+    # GOOGLE_CLIENT_SECRET = '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'
+    # GOOGLE_REFRESH_TOKEN = \
+    #     '1//0gcJzGIdMsbnXCgYIARAAGBASNwF-L9IrfDfaxU9IokrvDsb9jjMJviGcqznXDltHgfsMamC5uV90zZd0ZTbhrVadVcEbMMqhjMo'
+    #
+    OTP = random.randint(1000, 9999)
+    # if GOOGLE_REFRESH_TOKEN is None:
+    #     print('No refresh token found, obtaining one')
+    #     refresh_token, access_token, expires_in = get_authorization(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET)
+    #     print('Set the following as your GOOGLE_REFRESH_TOKEN:', refresh_token)
+    #     exit()
+    #
+    # # valid_receiver_email = email_verification(receiver_email)
+    # send_mail('jasonsimsamsung+1@gmail.com', new_user.email,
+    #           'Verification code',
+    #           'Here is your OTP<br/>' +
+    #           f'OTP: {OTP}')
+    #
+    # print("OTP has been sent to " + new_user.email)
+    # return {"message": "Verification sent", "OTP": f"{OTP}"}
+    host = "smtp.gmail.com"
+    port = 587
+    user = "jasonsimsamsung@gmail.com"
+    recipient = new_user.email
+    subject = "Verify your email"
+    msg = f"OTP: {OTP}"
+    sender = user
+    recipients = [recipient]
+    send_email(host, port, subject, msg, sender, recipients)
+    return {"message": "Verification sent", "OTP": f"{OTP}"}
 
 
 @router.post('/login', response_model=models.TokenSchema)
@@ -130,8 +167,8 @@ def change_password(request: models.ChangePassword = Depends()):
     if user is None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User not found")
 
-    if not verify_password(request.old_password, user[3]):
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid old password")
+    # if not verify_password(request.old_password, user[3]):
+    #     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid old password")
 
     encrypted_password = get_hashed_password(request.new_password)
     cursor.execute("UPDATE users2 SET password=%s WHERE email=%s", (encrypted_password, request.email))
