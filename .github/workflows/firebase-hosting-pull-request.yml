@@ -14,10 +14,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: npm ci && npm run build
-        working-directory: ./frontend
+	working-directory: ./frontend
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          entrypoint: ./frontend
+	  entrypoint: ./frontend
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_REFINED_DENSITY_297301 }}
           projectId: refined-density-297301
