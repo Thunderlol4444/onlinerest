@@ -11,6 +11,7 @@ import signal
 from .emailXauth import send_email
 from dependencies.limiting_algorithms import RateLimitExceeded
 from dependencies.rate_limiter import RateLimitFactory
+from main import database, storage
 router: APIRouter = APIRouter()
 ip_addresses = {}
 
@@ -115,10 +116,7 @@ def register_email_verification(new_user: models.EmailVerification = Depends()):
 
 @router.post('/login', response_model=models.TokenSchema, )
 def login(request: models.RequestDetails = Depends()):
-    connection = get_database_connection()
-    cursor = connection.cursor(buffered=True)
-    cursor.execute("SELECT * FROM users2 WHERE email=%s", (request.email,))
-    user = cursor.fetchone()
+    user = database.child("users").get({"email": "request.email"})
     if user is None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Incorrect email")
     hashed_pass = user[3]
@@ -128,8 +126,7 @@ def login(request: models.RequestDetails = Depends()):
             detail="Incorrect password"
         )
 
-    cursor.execute("SELECT * FROM TokenTable WHERE user_id=%s", (user[0],),)
-    token = cursor.fetchone()
+    token = database.child("users").get({"user_id": "user[0]"})
     if token:
         if token[3] == 1:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="user already signed in")
@@ -140,7 +137,8 @@ def login(request: models.RequestDetails = Depends()):
                 access = create_access_token(user[0])
                 print(access)
                 refresh = token[2]
-                cursor.execute("UPDATE TokenTable SET access_token=%s, status=%s WHERE user_id=%s", (access, 1, user[0]))
+                database.child("TokenTable").child({"user_id": user[0]}).update({"access_token": access, "status": 1})
+                da
                 cursor.execute("DELETE FROM TokenTable WHERE status=%s AND user_id=%s", (0, user[0]))
                 connection.commit()
                 return {

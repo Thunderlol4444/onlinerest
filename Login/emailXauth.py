@@ -1,5 +1,4 @@
 from __future__ import print_function
-
 import base64
 import os.path
 import random
@@ -17,7 +16,7 @@ SCOPES = ['https://mail.google.com/']
 USER_TOKENS = 'token.json'
 
 # application credentials
-CREDENTIALS = r'C:\Users\Thunder\PycharmProjects\localHostTesting\credentials.json'
+CREDENTIALS = r'C:\Users\Thunder\Desktop\angkasax\github\localrest\credentials.json'
 
 
 def get_token() -> str:
