@@ -8,6 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import pyrebase
 import uvicorn
+import os
 firebaseConfig = {
   "apiKey": "AIzaSyC6XVvfqE8zEqT_kxNjaS478N1wkLQuyZk",
   "authDomain": "refined-density-297301.firebaseapp.com",
