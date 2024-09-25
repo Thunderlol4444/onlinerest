@@ -6,7 +6,6 @@ from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-import pyrebase
 import uvicorn
 import os
 firebaseConfig = {
@@ -51,5 +50,6 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
+
 if __name__ == '__main__':
-    uvicorn.run("main:app", host="0.0.0.0", port=int(os.environ.get('PORT', 8000)), log_level="info")
+    uvicorn.run("main:app", host="0.0.0.0", port=int(os.environ.get('PORT', 8080)), log_level="info")
