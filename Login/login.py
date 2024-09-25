@@ -11,7 +11,6 @@ import signal
 from .emailXauth import send_email
 from dependencies.limiting_algorithms import RateLimitExceeded
 from dependencies.rate_limiter import RateLimitFactory
-from main import database, storage
 router: APIRouter = APIRouter()
 ip_addresses = {}
 

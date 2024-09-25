@@ -19,9 +19,9 @@ firebaseConfig = {
   "measurementId": "G-9GXBS8ZVCK"
 }
 
-firebase = pyrebase.initialize_app(firebaseConfig)
-storage = firebase.storage()
-database = firebase.database()
+# firebase = pyrebase.initialize_app(firebaseConfig)
+# storage = firebase.storage()
+# database = firebase.database()
 
 
 @asynccontextmanager
@@ -31,8 +31,8 @@ async def lifespan(app: FastAPI):
     yield
     print("Connection closed")
 app = FastAPI(lifespan=lifespan)
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
+# app.mount("/static", StaticFiles(directory="static"), name="static")
+# templates = Jinja2Templates(directory="templates")
 app.include_router(login.router)
 app.include_router(getdata.router)
 
