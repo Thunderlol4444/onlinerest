@@ -25,7 +25,7 @@ firebaseConfig = {
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    create_table()
+    # create_table()
     print("Connection established")
     yield
     print("Connection closed")
