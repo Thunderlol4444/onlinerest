@@ -33,19 +33,16 @@ def limited(request):
 def token_required(func):
     @wraps(func)
     async def wrapper(**kwargs):
-        connection = get_database_connection()
+        directory = get_database_connection()
         payload = jwt.decode(kwargs['dependencies'], JWT_SECRET_KEY, ALGORITHM)
         user_id = payload['sub']
-        cursor = connection.cursor()
-        cursor.execute("SELECT * FROM TokenTable WHERE user_id=%s AND access_token=%s AND status=%s",
-                       (user_id, kwargs['dependencies'], True))
-        data = cursor.fetchone()
-        if data:
+        user_data = directory.child("TokenTable").order_by_child("user_id").equal_to(user_id).get()
+        access_token_list = [value["access_token"] for key, value in dict(user_data).items()]
+        if access_token_list[0] == kwargs['dependencies']:
             return func(kwargs['dependencies'])
 
         else:
             return {'msg': "Token blocked"}
-
     return wrapper
 
 
@@ -119,42 +116,61 @@ def register_email_verification(new_user: models.EmailVerification = Depends()):
 
 @router.post('/login', response_model=models.TokenSchema, )
 def login(request: models.RequestDetails = Depends()):
-    user = database.child("users").get({"email": "request.email"})
-    if user is None:
+    directory = get_database_connection()
+    user_list = directory.child("Users").order_by_child("email").equal_to(request.email).get()
+    email = None
+    password = None
+    user_id = None
+    for key, value in dict(user_list).items():
+        email = value["email"]
+        password = value["password"]
+        user_id = value["user_id"]
+    if email is None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Incorrect email")
-    hashed_pass = user[3]
+    hashed_pass = password
     if not verify_password(request.password, hashed_pass):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Incorrect password"
         )
 
-    token = database.child("users").get({"user_id": "user[0]"})
-    if token:
-        if token[3] == 1:
+    token_list = directory.child("TokenTable").order_by_child("user_id").equal_to(user_id).get()
+    access = None
+    refresh = None
+    logged_in = None
+    token_name = None
+    for key, value in dict(token_list).items():
+        token_name = key
+        access = value["access_token"]
+        refresh = value["refresh_token"]
+        logged_in = value["status"]
+    if access:
+        if logged_in:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="user already signed in")
         else:
-            refresh_token2 = refresh_token(token[2])
+            refresh_token2 = refresh_token(refresh)
             print(refresh_token2)
             if time() - float(refresh_token2["exp"]) < REFRESH_TOKEN_EXPIRE_MINUTES:
-                access = create_access_token(user[0])
+                access = create_access_token(user_id)
                 print(access)
-                refresh = token[2]
-                database.child("TokenTable").child({"user_id": user[0]}).update({"access_token": access, "status": 1})
-                da
-                cursor.execute("DELETE FROM TokenTable WHERE status=%s AND user_id=%s", (0, user[0]))
-                connection.commit()
+                directory.child("TokenTable").child(token_name).update({"access_token": access})
                 return {
                     "access_token": access,
                     "refresh_token": refresh,
                 }
-    access = create_access_token(user[0])
-    refresh = create_refresh_token(user[0])
-    values = (user[0], access, refresh, True)
-    query = "INSERT INTO TokenTable (user_id, access_token, refresh_token, status) VALUES (%s, %s, %s, %s)"
-    cursor.execute("DELETE FROM TokenTable WHERE status=%s AND user_id=%s", (0, user[0]))
-    cursor.execute(query, values)
-    connection.commit()
+            else:
+                access = create_access_token(user_id)
+                refresh = create_refresh_token(user_id)
+                directory.child("TokenTable").child(token_name).update({"access_token": access,
+                                                                        "refresh_token": refresh})
+                return ({
+                    "access_token": access,
+                    "refresh_token": refresh,
+                }, "New refresh token generated")
+    access = create_access_token(user_id)
+    refresh = create_refresh_token(user_id)
+    directory.child("TokenTable").push().set({"user_id": user_id, "access_token": access, "refresh_token": refresh,
+                                              "status": 1, "created_date": datetime.now()})
     return {
         "access_token": access,
         "refresh_token": refresh,

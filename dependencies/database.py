@@ -1,84 +1,47 @@
-import mysql.connector
+import datetime
+
+import firebase_admin
+from firebase_admin import db
+import json
+import os
+
+firebaseConfig = {
+    "apiKey": "AIzaSyC6XVvfqE8zEqT_kxNjaS478N1wkLQuyZk",
+    "authDomain": "refined-density-297301.firebaseapp.com",
+    "projectId": "refined-density-297301",
+    "storageBucket": "refined-density-297301.appspot.com",
+    "messagingSenderId": "1022384984816",
+    "appId": "1:1022384984816:web:d2d4a6feefeb889c202835",
+    "measurementId": "G-9GXBS8ZVCK",
+    "databaseURL": "https://refined-density-297301-default-rtdb.asia-southeast1.firebasedatabase.app",
+    # "serviceAccount": r"C:\Users\Thunder\Desktop\angkasax\github\localrest\admincreds.json"
+}
+
+cwd = os.getcwd()
+os.path.join(cwd,)
 
 
 def get_database_connection():
-    return mysql.connector.connect(
-        host="localhost",
-        user="Thunder",
-        password="020708",
-        database="mydatabase"
-    )
+    cre_obj = firebase_admin.credentials.Certificate(
+        r".\admincreds.json")
+    firebase = firebase_admin.initialize_app(cre_obj, {"databaseURL": firebaseConfig["databaseURL"]})
+    return db.reference("")
 
 
 def create_table():
-    connection = get_database_connection()
-    cursor = connection.cursor()
-    query = ("CREATE DATABASE IF NOT EXISTS mydatabase ;\
-             USE mydatabase;\
-             CREATE TABLE IF NOT EXISTS users2 (\
-                id INT AUTO_INCREMENT PRIMARY KEY,\
-                username VARCHAR(50) NOT NULL,\
-                email VARCHAR(100) NOT NULL,\
-                password VARCHAR(100) NOT NULL\
-                );\
-             CREATE TABLE IF NOT EXISTS TokenTable(\
-                user_id INT,\
-                access_toke VARCHAR(450) PRIMARY KEY,\
-                refresh_toke VARCHAR(450) NOT NULL,\
-                status BOOLEAN,\
-                created_date DATETIME DEFAULT CURRENT_TIMESTAMP\
-                )\
-             "
-             )
-    cursor.execute(query, multi=True)
-    cursor.close()
-    connection.close()
-    return {'message': 'Table created'}
-
-
-def create_data_table():
-    connection = get_database_connection()
-    cursor = connection.cursor()
-    """    query = ("CREATE DATABASE IF NOT EXISTS mydatabase ;\
-                     USE mydatabase;\
-                     CREATE TABLE IF NOT EXISTS aistable (\
-                        id INT AUTO_INCREMENT PRIMARY KEY,\
-                        VESSEL_HASH VARCHAR(50) NOT NULL,\
-                        speed FLOAT(15, 4) NOT NULL,\
-                        LON INT(10) NOT NULL,\
-                        LAT INT(10) NOT NULL,\
-                        COURSE INT(10) NOT NULL,\
-                        HEADING INT(10) NOT NULL,\
-                        TIMESTAMP VARCHAR(50) NOT NULL,\
-                        departurePortName VARCHAR(50) NOT NULL\
-                        );\
-                     "
-             )"""
-    query = ("CREATE TABLE IF NOT EXISTS aistable2 (\
-                id INT AUTO_INCREMENT PRIMARY KEY,\
-                CONTACT_NUMBER VARCHAR(50) NOT NULL,\
-                BASEDATETIME DATETIME NOT NULL ,\
-                LAT FLOAT(10) NOT NULL,\
-                LON FLOAT(10) NOT NULL,\
-                SOG FLOAT(10) NOT NULL,\
-                COG FLOAT(10) NOT NULL,\
-                HEADING INT(10) NOT NULL,\
-                VESSELNAME VARCHAR(50) NOT NULL,\
-                IMO VARCHAR(50),\
-                CALLSIGN VARCHAR(50),\
-                VESSELTYPE INT(5),\
-                STATUS INT(5) DEFAULT 15,\
-                LENGTH INT(10),\
-                WIDTH INT(10),\
-                DRAFT FLOAT(10),\
-                CARGO INT(10),\
-                TRANSCEIVERCLASS VARCHAR(5)\
-                );\
-            ")
-    cursor.execute(query)
-    connection.commit()
-    cursor.close()
-    connection.close()
+    directory = get_database_connection()
+    # ref = parent_ref.child("tokentable")
+    # user_data = directory.child("TokenTable").order_by_child("user_id").equal_to(1).get()
+    user_list = directory.child("Users").order_by_child("email").equal_to("jason").get()
+    email = None
+    password = None
+    user_id = None
+    for key, value in dict(user_list).items():
+        email = value["email"]
+        password = value["password"]
+        user_id = value["user_id"]
+    print(user_list)
+    print(email)
     return {'message': 'Table created'}
 
 

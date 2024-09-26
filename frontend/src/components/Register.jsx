@@ -34,7 +34,7 @@ export default function Register() {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        const url = new URL("http://localhost:8000/register/email_verification");
+        const url = new URL("https://onlinerest-1022384984816.asia-southeast1.run.app/register/email_verification");
         url.searchParams.append("email", formData.email);
         url.searchParams.append("name", formData.username)
         fetch(url, {
@@ -56,7 +56,7 @@ export default function Register() {
         e.preventDefault()
         if (OTP.OTP===OTP.inputOTP){
             console.log(formData)
-            const url = new URL("http://localhost:8000/register");
+            const url = new URL("https://onlinerest-1022384984816.asia-southeast1.run.app/register");
             url.searchParams.append("username", formData.username);
             url.searchParams.append("email", formData.email);
             url.searchParams.append("password", formData.password);

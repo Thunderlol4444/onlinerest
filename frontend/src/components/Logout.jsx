@@ -11,7 +11,7 @@ export default function Logout() {
     useEffect(() => {
         const performLogout = async () => {
             try {
-                const response = await fetch("http://localhost:8000/logout", {
+                const response = await fetch("https://onlinerest-1022384984816.asia-southeast1.run.app/logout", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

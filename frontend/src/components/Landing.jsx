@@ -30,7 +30,7 @@ export default function Landing() {
 
         if (access_token !== '') {
             const getdata = async () => {
-                const response = await fetch("http://localhost:8000/getusers", {
+                const response = await fetch("https://onlinerest-1022384984816.asia-southeast1.run.app/getusers", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",

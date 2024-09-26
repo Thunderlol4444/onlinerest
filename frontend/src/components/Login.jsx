@@ -23,7 +23,7 @@ export default function Login() {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        const url = new URL("http://localhost:8000/login");
+        const url = new URL("https://onlinerest-1022384984816.asia-southeast1.run.app/login");
         url.searchParams.append("email", formData.email);
         url.searchParams.append("password", formData.password);
         fetch(url, {
