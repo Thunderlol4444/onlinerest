@@ -23,7 +23,7 @@ os.path.join(cwd,)
 
 def get_database_connection():
     cre_obj = firebase_admin.credentials.Certificate(
-        r".\admincreds.json")
+        "/onlinerest/admincreds.json")
     firebase = firebase_admin.initialize_app(cre_obj, {"databaseURL": firebaseConfig["databaseURL"]})
     return db.reference("")
 
