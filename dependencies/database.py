@@ -31,6 +31,7 @@ def get_database_connection():
 
 
 def create_table():
+    get_database_connection()
     directory = db.reference("")
     # ref = parent_ref.child("tokentable")
     # user_data = directory.child("TokenTable").order_by_child("user_id").equal_to(1).get()
