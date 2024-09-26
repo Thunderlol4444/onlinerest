@@ -1,4 +1,8 @@
 import random
+import os
+import signal
+import firebase_admin
+import json
 from functools import wraps
 from fastapi import Depends, HTTPException, status,  Response, APIRouter, Request
 from dependencies.database import get_database_connection
@@ -6,11 +10,11 @@ from . import models
 from .utils import *
 from .auth_bearer import JWTBearer
 from time import time
-import os
-import signal
+from firebase_admin import db
 from .emailXauth import send_email
 from dependencies.limiting_algorithms import RateLimitExceeded
 from dependencies.rate_limiter import RateLimitFactory
+
 router: APIRouter = APIRouter()
 ip_addresses = {}
 
