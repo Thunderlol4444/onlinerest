@@ -64,19 +64,22 @@ async def say_hello(name: str):
 
 @router.post("/register")
 def register_user(user: models.UserCreate = Depends()):
-    connection = get_database_connection()
-    cursor = connection.cursor()
-    cursor.execute("SELECT * FROM users2 WHERE email=%s", (user.email,))
-    existing_user = cursor.fetchone()
-    if existing_user:
+    directory = db.reference("/Users")
+    user_data = directory.order_by_child("email").equal_to(user.email).get()
+    email = None
+    for key, value in dict(user_data).items():
+        email = value["email"]
+    if email is not None:
         raise HTTPException(status_code=400, detail="Email already registered")
     encrypted_password = get_hashed_password(user.password)
-    values = (user.username, user.email, encrypted_password)
-    query = "INSERT INTO users2 (username, email, password) VALUES (%s, %s, %s)"
-    cursor.execute(query, values)
-    connection.commit()
-    cursor.close()
-    connection.close()
+    user_list = directory.order_by_child("user_id").get()
+    user_id = 1
+    for key, value in dict(user_list).items():
+        if user_id != value["user_id"]:
+            break
+        user_id += 1
+    directory.push().set({"user_id": user_id, "username": user.username, "email": user.email,
+                          "password": encrypted_password})
     return {"message": "user created successfully"}
 
 
@@ -133,7 +136,6 @@ def login(request: models.RequestDetails = Depends()):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Incorrect password"
         )
-
     token_list = directory.child("TokenTable").order_by_child("user_id").equal_to(user_id).get()
     access = None
     refresh = None
