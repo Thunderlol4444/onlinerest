@@ -33,7 +33,7 @@ def limited(request):
 def token_required(func):
     @wraps(func)
     async def wrapper(**kwargs):
-        directory = get_database_connection()
+        directory = db.reference("")
         payload = jwt.decode(kwargs['dependencies'], JWT_SECRET_KEY, ALGORITHM)
         user_id = payload['sub']
         user_data = directory.child("TokenTable").order_by_child("user_id").equal_to(user_id).get()
@@ -116,7 +116,7 @@ def register_email_verification(new_user: models.EmailVerification = Depends()):
 
 @router.post('/login', response_model=models.TokenSchema, )
 def login(request: models.RequestDetails = Depends()):
-    directory = get_database_connection()
+    directory = db.reference("")
     user_list = directory.child("Users").order_by_child("email").equal_to(request.email).get()
     email = None
     password = None

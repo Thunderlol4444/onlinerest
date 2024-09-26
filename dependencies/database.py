@@ -22,14 +22,16 @@ os.path.join(cwd,)
 
 
 def get_database_connection():
-    cre_obj = firebase_admin.credentials.Certificate(
-        "/onlinerest/admincreds.json")
+    try:
+        cre_obj = firebase_admin.credentials.Certificate("/onlinerest/admincreds.json")
+    except FileNotFoundError:
+        cre_obj = firebase_admin.credentials.Certificate(r".\admincreds.json")
     firebase = firebase_admin.initialize_app(cre_obj, {"databaseURL": firebaseConfig["databaseURL"]})
-    return db.reference("")
+    return
 
 
 def create_table():
-    directory = get_database_connection()
+    directory = db.reference("")
     # ref = parent_ref.child("tokentable")
     # user_data = directory.child("TokenTable").order_by_child("user_id").equal_to(1).get()
     user_list = directory.child("Users").order_by_child("email").equal_to("jason").get()
