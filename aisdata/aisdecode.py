@@ -1,6 +1,6 @@
 data = []
 
-with open(r'C:\Users\Thunder\Downloads\type 24.txt', 'r') as file:
+with open(r'type 1.txt', 'r') as file:
     rows = file.readlines()
     for row in rows:
         x = row.strip('\n').split(',')
@@ -258,7 +258,7 @@ def type_determining(raw_data):
     return data_type
 
 
-with open(r'C:\Users\Thunder\Downloads\decoded_data.csv', 'w') as file:
+with open('decoded_data.csv', 'w') as file:
     match type_determining(data):
         case _ if type_determining(data) <= 3:
             decoded_data = ais_type_a(data)

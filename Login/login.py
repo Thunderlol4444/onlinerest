@@ -78,7 +78,7 @@ def register_user(user: models.UserCreate = Depends()):
         if user_id != value["user_id"]:
             break
         user_id += 1
-    directory.push().set({"user_id": user_id, "username": user.username, "email": user.email,
+    directory.child("user"+str(user_id)).set({"user_id": user_id, "username": user.username, "email": user.email,
                           "password": encrypted_password})
     return {"message": "user created successfully"}
 

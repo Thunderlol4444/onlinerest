@@ -1,5 +1,5 @@
 import csv
-from database import *
+from dependencies.database import *
 
 data_list = list()
 
@@ -19,9 +19,8 @@ data_list = list()
 #
 #     print(data_list)
 
-with open(r'C:\Users\Thunder\Downloads\decoded_data.csv') as csvfile:
+with open('decoded_data.csv') as csvfile:
     reader = csv.DictReader(csvfile)
-    create_type_a_table()
-    insert_data_type_a(reader)
+insert_data_type_a()
     #create_data_table()
     #insert_data(reader)
