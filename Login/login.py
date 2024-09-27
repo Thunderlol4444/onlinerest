@@ -183,10 +183,14 @@ def login(request: models.RequestDetails = Depends()):
 @token_required
 def get_users(request: Request, dependencies=Depends(JWTBearer()), tags=["Admin"]):
     limited(request)
-    connection = get_database_connection()
-    cursor = connection.cursor()
-    cursor.execute("SELECT * FROM users2")
-    users = cursor.fetchall()
+    directory = db.reference("/Users")
+    user_list = directory.order_by_child("user_id").get()
+    users = []
+    for key, value in dict(user_list).items():
+        user = []
+        for itemKey, itemValue in value:
+            user.append(itemValue)
+        users.append(user)
     return users
 
 
