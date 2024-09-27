@@ -3,6 +3,7 @@ import os
 import signal
 import firebase_admin
 import json
+import datetime as date
 from functools import wraps
 from fastapi import Depends, HTTPException, status,  Response, APIRouter, Request
 from dependencies.database import get_database_connection
@@ -124,7 +125,9 @@ def login(request: models.RequestDetails = Depends()):
     email = None
     password = None
     user_id = None
+    userkey = None
     for key, value in dict(user_list).items():
+        userkey = key
         email = value["email"]
         password = value["password"]
         user_id = value["user_id"]
@@ -146,8 +149,11 @@ def login(request: models.RequestDetails = Depends()):
         access = value["access_token"]
         refresh = value["refresh_token"]
         logged_in = value["status"]
+        print("access: ", access)
+        print(dict(value))
+
     if access:
-        if logged_in:
+        if logged_in == 1:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="user already signed in")
         else:
             refresh_token2 = refresh_token(refresh)
@@ -155,7 +161,7 @@ def login(request: models.RequestDetails = Depends()):
             if time() - float(refresh_token2["exp"]) < REFRESH_TOKEN_EXPIRE_MINUTES:
                 access = create_access_token(user_id)
                 print(access)
-                directory.child("TokenTable").child(token_name).update({"access_token": access})
+                directory.child("TokenTable").child(token_name).update({"access_token": access, "status": 1})
                 return {
                     "access_token": access,
                     "refresh_token": refresh,
@@ -164,15 +170,16 @@ def login(request: models.RequestDetails = Depends()):
                 access = create_access_token(user_id)
                 refresh = create_refresh_token(user_id)
                 directory.child("TokenTable").child(token_name).update({"access_token": access,
-                                                                        "refresh_token": refresh})
+                                                                        "refresh_token": refresh, "status": 1})
                 return ({
                     "access_token": access,
                     "refresh_token": refresh,
                 }, "New refresh token generated")
     access = create_access_token(user_id)
     refresh = create_refresh_token(user_id)
-    directory.child("TokenTable").push().set({"user_id": user_id, "access_token": access, "refresh_token": refresh,
-                                              "status": 1, "created_date": datetime.now()})
+    now = date.datetime.now()
+    directory.child("TokenTable").child(userkey).set({"user_id": user_id, "access_token": access,
+                                                      "refresh_token": refresh, "status": 1, "created_date": str(now)})
     return {
         "access_token": access,
         "refresh_token": refresh,
@@ -196,47 +203,37 @@ def get_users(request: Request, dependencies=Depends(JWTBearer()), tags=["Admin"
 
 @router.patch('/change-password')
 def change_password(request: models.ChangePassword = Depends()):
-    connection = get_database_connection()
-    cursor = connection.cursor()
-    cursor.execute("SELECT * FROM users2 WHERE email=%s", (request.email,))
-    user = cursor.fetchone()
+    directory = db.reference("/Users")
+    user = directory.order_by_child("email").equal_to(request.email).get()
+    userkey = None
+    for key, value in dict(user).items():
+        userkey = key
     if user is None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User not found")
-
-    # if not verify_password(request.old_password, user[3]):
-    #     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid old password")
-
     encrypted_password = get_hashed_password(request.new_password)
-    cursor.execute("UPDATE users2 SET password=%s WHERE email=%s", (encrypted_password, request.email))
-    connection.commit()
-
+    directory.child(userkey).update({"password": encrypted_password})
     return {"message": "Password changed successfully"}
 
 
 @router.post('/logout')
 def logout(dependencies=Depends(JWTBearer())):
-    connection = get_database_connection()
+    directory = db.reference("/TokenTable")
     token = dependencies
     payload = jwt.decode(token, JWT_SECRET_KEY, ALGORITHM)
     user_id = payload['sub']
-    print(user_id)
-    cursor = connection.cursor()
-    cursor.execute("SELECT * FROM TokenTable")
-    token_record = cursor.fetchall()
+    token_record = directory.get()
     info = []
-    for record in token_record:
+    for key, record in dict(token_record).items():
         print("record", record)
-        if (datetime.utcnow() - record[4]).days > 1:
-            info.append(record[0])
+        date_format = '%Y-%m-%d %H:%M:%S.%f'
+        if (datetime.utcnow() - datetime.strptime(record["created_date"], date_format)).days > 1:
+            info.append(key)
     print(tuple(info))
     if info:
         for i in range(len(info)):
-            cursor.execute("DELETE FROM TokenTable WHERE user_id=%s", (info[i],))
-            connection.commit()
-    cursor.execute("SELECT * FROM TokenTable WHERE user_id=%s AND access_token=%s", (user_id, token))
-    existing_token = cursor.fetchone()
+            directory.child(info[i]).set("")
+    existing_token = directory.order_by_child("user_id").equal_to(user_id).get()
     if existing_token:
-        cursor.execute("UPDATE TokenTable SET status=%s WHERE user_id=%s", (0, user_id))
-        connection.commit()
-    connection.close()
+        for key, value in dict(existing_token).items():
+            directory.child(key).update({"status": 0})
     return {"message": "Logout Successfully"}

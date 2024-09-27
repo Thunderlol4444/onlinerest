@@ -44,7 +44,8 @@ def create_table():
         password = value["password"]
         user_id = value["user_id"]
     print(user_list)
-    print(email)
+    now = datetime.datetime.now()
+    print(now)
     # data_list = directory.child("Books").order_by_child("Price").get()
     # data = [value for key, value in dict(data_list).items()]
     # print(data)
