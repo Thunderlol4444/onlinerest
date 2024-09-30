@@ -14,9 +14,7 @@ def ais_data(dependencies=Depends(JWTBearer())):
     data_list = directory.order_by_child("id").get()
     data = [value for key, value in dict(data_list).items()]
     print(data)
-    return (JSONResponse(
-        status_code=200,
-        content={data}))
+    return data
 
 
 @router.get("/ais_data_A")
@@ -26,6 +24,4 @@ def ais_data_a(dependencies=Depends(JWTBearer())):
     data_list = directory.order_by_child("id").get()
     data = [value for key, value in dict(data_list).items()]
     print(data)
-    return (JSONResponse(
-        status_code=200,
-        content={data}))
+    return data
