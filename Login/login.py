@@ -69,7 +69,11 @@ def register_user(user: models.UserCreate = Depends()):
     for key, value in dict(user_data).items():
         email = value["email"]
     if email is not None:
-        raise HTTPException(status_code=400, detail="Email already registered")
+        raise HTTPException(status_code=400, detail="Email already registered", headers={
+                "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
+                "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type, Authorization",
+            })
     encrypted_password = get_hashed_password(user.password)
     user_list = directory.order_by_child("user_id").get()
     user_id = 1
@@ -144,12 +148,21 @@ def login(request: models.RequestDetails = Depends()):
         password = value["password"]
         user_id = value["user_id"]
     if email is None:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Incorrect email")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Incorrect email", headers={
+                "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
+                "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type, Authorization",
+            })
     hashed_pass = password
     if not verify_password(request.password, hashed_pass):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Incorrect password"
+            detail="Incorrect password",
+            headers={
+                "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
+                "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type, Authorization",
+            }
         )
     token_list = directory.child("TokenTable").order_by_child("user_id").equal_to(user_id).get()
     access = None
@@ -166,7 +179,13 @@ def login(request: models.RequestDetails = Depends()):
 
     if access:
         if logged_in == 1:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="user already signed in")
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="user already signed in",
+                                headers={
+                                    "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
+                                    "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+                                    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+                                }
+                                )
         else:
             refresh_token2 = refresh_token(refresh)
             print(refresh_token2)
@@ -241,7 +260,11 @@ def change_password(request: models.ChangePassword = Depends()):
     for key, value in dict(user).items():
         userkey = key
     if user is None:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User not found")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User not found", headers={
+                "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
+                "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type, Authorization",
+            })
     encrypted_password = get_hashed_password(request.new_password)
     directory.child(userkey).update({"password": encrypted_password})
     return (JSONResponse(
