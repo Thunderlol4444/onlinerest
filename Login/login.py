@@ -69,11 +69,7 @@ def register_user(user: models.UserCreate = Depends()):
     for key, value in dict(user_data).items():
         email = value["email"]
     if email is not None:
-        raise HTTPException(status_code=400, detail="Email already registered", headers={
-                "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
-                "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-                "Access-Control-Allow-Headers": "Content-Type, Authorization",
-            })
+        raise HTTPException(status_code=400, detail="Email already registered")
     encrypted_password = get_hashed_password(user.password)
     user_list = directory.order_by_child("user_id").get()
     user_id = 1
@@ -85,12 +81,7 @@ def register_user(user: models.UserCreate = Depends()):
                           "password": encrypted_password})
     return (JSONResponse(
             status_code=200,
-            content={"message": "user created successfully", "user": {"email": email}},
-            headers={
-                "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
-                "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-                "Access-Control-Allow-Headers": "Content-Type, Authorization",
-            }))
+            content={"message": "user created successfully", "user": {"email": email}}))
 
 
 @router.post("/register/email_verification")
@@ -126,12 +117,7 @@ def register_email_verification(new_user: models.EmailVerification = Depends()):
     send_email(host, port, subject, msg, sender, recipients)
     return (JSONResponse(
             status_code=200,
-            content={"message": "Verification sent", "OTP": f"{OTP}"},
-            headers={
-                "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
-                "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-                "Access-Control-Allow-Headers": "Content-Type, Authorization",
-            }))
+            content={"message": "Verification sent", "OTP": f"{OTP}"}))
 
 
 @router.post('/login', response_model=models.TokenSchema, )
@@ -148,22 +134,12 @@ def login(request: models.RequestDetails = Depends()):
         password = value["password"]
         user_id = value["user_id"]
     if email is None:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Incorrect email", headers={
-                "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
-                "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-                "Access-Control-Allow-Headers": "Content-Type, Authorization",
-            })
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Incorrect email")
     hashed_pass = password
     if not verify_password(request.password, hashed_pass):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Incorrect password",
-            headers={
-                "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
-                "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-                "Access-Control-Allow-Headers": "Content-Type, Authorization",
-            }
-        )
+            detail="Incorrect password")
     token_list = directory.child("TokenTable").order_by_child("user_id").equal_to(user_id).get()
     access = None
     refresh = None
@@ -179,13 +155,7 @@ def login(request: models.RequestDetails = Depends()):
 
     if access:
         if logged_in == 1:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="user already signed in",
-                                headers={
-                                    "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
-                                    "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-                                    "Access-Control-Allow-Headers": "Content-Type, Authorization",
-                                }
-                                )
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="user already signed in")
         else:
             refresh_token2 = refresh_token(refresh)
             print(refresh_token2)
@@ -195,12 +165,7 @@ def login(request: models.RequestDetails = Depends()):
                 directory.child("TokenTable").child(token_name).update({"access_token": access, "status": 1})
                 return (JSONResponse(
                         status_code=200,
-                        content={"access_token": access, "refresh_token": refresh},
-                        headers={
-                            "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
-                            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-                            "Access-Control-Allow-Headers": "Content-Type, Authorization",
-                        }))
+                        content={"access_token": access, "refresh_token": refresh}))
             else:
                 access = create_access_token(user_id)
                 refresh = create_refresh_token(user_id)
@@ -209,12 +174,7 @@ def login(request: models.RequestDetails = Depends()):
                 return (JSONResponse(
                     status_code=200,
                     content={"access_token": access, "refresh_token": refresh,
-                             "message": "New refresh token generated"},
-                    headers={
-                        "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
-                        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-                        "Access-Control-Allow-Headers": "Content-Type, Authorization",
-                    }))
+                             "message": "New refresh token generated"}))
     access = create_access_token(user_id)
     refresh = create_refresh_token(user_id)
     now = date.datetime.now()
@@ -222,12 +182,7 @@ def login(request: models.RequestDetails = Depends()):
                                                       "refresh_token": refresh, "status": 1, "created_date": str(now)})
     return (JSONResponse(
         status_code=200,
-        content={"access_token": access, "refresh_token": refresh},
-        headers={
-            "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
-            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-            "Access-Control-Allow-Headers": "Content-Type, Authorization",
-        }))
+        content={"access_token": access, "refresh_token": refresh}))
 
 
 @router.get('/getusers')
@@ -244,12 +199,7 @@ def get_users(request: Request, dependencies=Depends(JWTBearer()), tags=["Admin"
         users.append(user)
     return (JSONResponse(
             status_code=200,
-            content={users},
-            headers={
-                "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
-                "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-                "Access-Control-Allow-Headers": "Content-Type, Authorization",
-            }))
+            content={users}))
 
 
 @router.patch('/change-password')
@@ -260,21 +210,12 @@ def change_password(request: models.ChangePassword = Depends()):
     for key, value in dict(user).items():
         userkey = key
     if user is None:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User not found", headers={
-                "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
-                "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-                "Access-Control-Allow-Headers": "Content-Type, Authorization",
-            })
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User not found")
     encrypted_password = get_hashed_password(request.new_password)
     directory.child(userkey).update({"password": encrypted_password})
     return (JSONResponse(
         status_code=200,
-        content={"message": "Password changed successfully"},
-        headers={
-            "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
-            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-            "Access-Control-Allow-Headers": "Content-Type, Authorization",
-        }))
+        content={"message": "Password changed successfully"}))
 
 
 @router.post('/logout')
@@ -300,9 +241,4 @@ def logout(dependencies=Depends(JWTBearer())):
             directory.child(key).update({"status": 0})
     return (JSONResponse(
         status_code=200,
-        content={"message": "Logout Successfully"},
-        headers={
-            "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
-            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-            "Access-Control-Allow-Headers": "Content-Type, Authorization",
-        }))
+        content={"message": "Logout Successfully"}))
