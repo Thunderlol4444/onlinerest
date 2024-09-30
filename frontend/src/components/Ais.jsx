@@ -34,7 +34,7 @@ export default function Ais() {
         //ais_data()
         ais_data_A()
 
-    }, [responseData]);
+    }, []);
 
     // var vesselCoordinates = responseData.map(function (item) {
     //     return({name: item[0], latitude: item[3], longitude: item[4]});
