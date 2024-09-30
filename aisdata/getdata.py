@@ -1,5 +1,5 @@
-from fastapi import FastAPI, Depends, HTTPException, APIRouter
-from dependencies.database import get_database_connection
+from fastapi import Depends, APIRouter
+from fastapi.responses import JSONResponse
 from Login.login import token_required
 from Login.auth_bearer import JWTBearer
 from firebase_admin import db
@@ -17,7 +17,12 @@ def ais_data(dependencies=Depends(JWTBearer())):
     print(data)
     cursor.close()
     connection.close()
-    return data
+    return (JSONResponse(
+        status_code=200,
+        content={data},
+        headers={
+            "Access-Control-Allow-Origin": "https://refined-density-297301.web.app"
+        }))
 
 
 @router.get("/ais_data_A")
@@ -27,4 +32,9 @@ def ais_data_a(dependencies=Depends(JWTBearer())):
     data_list = directory.order_by_child("id").get()
     data = [value for key, value in dict(data_list).items()]
     print(data)
-    return data
+    return (JSONResponse(
+        status_code=200,
+        content={data},
+        headers={
+            "Access-Control-Allow-Origin": "https://refined-density-297301.web.app"
+        }))

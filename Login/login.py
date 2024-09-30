@@ -12,6 +12,7 @@ from firebase_admin import db
 from .emailXauth import send_email
 from dependencies.limiting_algorithms import RateLimitExceeded
 from dependencies.rate_limiter import RateLimitFactory
+from fastapi.responses import JSONResponse
 
 router: APIRouter = APIRouter()
 ip_addresses = {}
@@ -78,7 +79,12 @@ def register_user(user: models.UserCreate = Depends()):
         user_id += 1
     directory.child("user"+str(user_id)).set({"user_id": user_id, "username": user.username, "email": user.email,
                           "password": encrypted_password})
-    return {"message": "user created successfully"}
+    return (JSONResponse(
+            status_code=200,
+            content={"message": "user created successfully", "user": {"email": email}},
+            headers={
+                "Access-Control-Allow-Origin": "https://refined-density-297301.web.app"
+            }))
 
 
 @router.post("/register/email_verification")
@@ -112,7 +118,12 @@ def register_email_verification(new_user: models.EmailVerification = Depends()):
     sender = user
     recipients = [recipient]
     send_email(host, port, subject, msg, sender, recipients)
-    return {"message": "Verification sent", "OTP": f"{OTP}"}
+    return (JSONResponse(
+            status_code=200,
+            content={"message": "Verification sent", "OTP": f"{OTP}"},
+            headers={
+                "Access-Control-Allow-Origin": "https://refined-density-297301.web.app"
+            }))
 
 
 @router.post('/login', response_model=models.TokenSchema, )
@@ -159,28 +170,35 @@ def login(request: models.RequestDetails = Depends()):
                 access = create_access_token(user_id)
                 print(access)
                 directory.child("TokenTable").child(token_name).update({"access_token": access, "status": 1})
-                return {
-                    "access_token": access,
-                    "refresh_token": refresh,
-                }
+                return (JSONResponse(
+                        status_code=200,
+                        content={"access_token": access, "refresh_token": refresh},
+                        headers={
+                            "Access-Control-Allow-Origin": "https://refined-density-297301.web.app"
+                        }))
             else:
                 access = create_access_token(user_id)
                 refresh = create_refresh_token(user_id)
                 directory.child("TokenTable").child(token_name).update({"access_token": access,
                                                                         "refresh_token": refresh, "status": 1})
-                return ({
-                    "access_token": access,
-                    "refresh_token": refresh,
-                }, "New refresh token generated")
+                return (JSONResponse(
+                    status_code=200,
+                    content={"access_token": access, "refresh_token": refresh,
+                             "message": "New refresh token generated"},
+                    headers={
+                        "Access-Control-Allow-Origin": "https://refined-density-297301.web.app"
+                    }))
     access = create_access_token(user_id)
     refresh = create_refresh_token(user_id)
     now = date.datetime.now()
     directory.child("TokenTable").child(userkey).set({"user_id": user_id, "access_token": access,
                                                       "refresh_token": refresh, "status": 1, "created_date": str(now)})
-    return {
-        "access_token": access,
-        "refresh_token": refresh,
-    }
+    return (JSONResponse(
+        status_code=200,
+        content={"access_token": access, "refresh_token": refresh},
+        headers={
+            "Access-Control-Allow-Origin": "https://refined-density-297301.web.app"
+        }))
 
 
 @router.get('/getusers')
@@ -195,7 +213,12 @@ def get_users(request: Request, dependencies=Depends(JWTBearer()), tags=["Admin"
         for itemKey, itemValue in value:
             user.append(itemValue)
         users.append(user)
-    return users
+    return (JSONResponse(
+            status_code=200,
+            content={users},
+            headers={
+                "Access-Control-Allow-Origin": "https://refined-density-297301.web.app"
+            }))
 
 
 @router.patch('/change-password')
@@ -209,7 +232,12 @@ def change_password(request: models.ChangePassword = Depends()):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User not found")
     encrypted_password = get_hashed_password(request.new_password)
     directory.child(userkey).update({"password": encrypted_password})
-    return {"message": "Password changed successfully"}
+    return (JSONResponse(
+        status_code=200,
+        content={"message": "Password changed successfully"},
+        headers={
+            "Access-Control-Allow-Origin": "https://refined-density-297301.web.app"
+        }))
 
 
 @router.post('/logout')
@@ -233,4 +261,9 @@ def logout(dependencies=Depends(JWTBearer())):
     if existing_token:
         for key, value in dict(existing_token).items():
             directory.child(key).update({"status": 0})
-    return {"message": "Logout Successfully"}
+    return (JSONResponse(
+        status_code=200,
+        content={"message": "Logout Successfully"},
+        headers={
+            "Access-Control-Allow-Origin": "https://refined-density-297301.web.app"
+        }))
