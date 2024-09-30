@@ -11,17 +11,21 @@ router: APIRouter = APIRouter()
 @token_required
 def ais_data(dependencies=Depends(JWTBearer())):
     directory = db.reference("/ais_data")
-    data_list = directory.order_by_child("id").get()
-    data = [value for key, value in dict(data_list).items()]
-    print(data)
+    data_list = directory.order_by_child("MMSI").get()
+    data = []
+    for data_point in data_list:
+        for key, value in dict(data_point).items():
+            data.append(value)
     return data
 
 
 @router.get("/ais_data_A")
 @token_required
 def ais_data_a(dependencies=Depends(JWTBearer())):
-    directory = db.reference("/AISDataA")
-    data_list = directory.order_by_child("id").get()
-    data = [value for key, value in dict(data_list).items()]
-    print(data)
+    directory = db.reference("/AisDataA")
+    data_list = directory.order_by_child("MMSI").get()
+    data = []
+    for data_point in data_list:
+        for key, value in dict(data_point).items():
+            data.append(value)
     return data
