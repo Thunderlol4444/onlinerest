@@ -14,6 +14,7 @@ export default function Login() {
     const {access_token, setToken } = React.useContext(access_token_context);
     const [loginFailed, setLoginFailed] = React.useState(false);
     const navigate = useNavigate();
+    const [msg, setMsg] = React.useState('');
 
 
     const handleChange = (e) => {
@@ -40,6 +41,7 @@ export default function Login() {
                 navigate("/landing"); // Navigate to the landing page
             } else {
                 setLoginFailed(true);
+                setMsg(data.detail);
                 console.error("Login failed");
             }
         })
@@ -63,7 +65,7 @@ export default function Login() {
                 <Button colorScheme="blue" type="submit" form="login" size="sm">Submit</Button>
                 <a href="/change-password" className="forget-button">Forget password?</a>
                 {loginFailed===true && (
-                    <Text color="red" mt={4}>Login failed. Please retry.</Text> // Conditionally render the retry message
+                    <Text color="red" mt={4}>{msg}. Please retry.</Text> // Conditionally render the retry message
                 )}
                 <Text pt="5" fontSize="medium">New Account?<Link href="/register" color="teal.300" fontSize="medium" pt="5" > Register</Link>
                 </Text>

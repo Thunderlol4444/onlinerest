@@ -13,6 +13,7 @@ export default function Register() {
     const [verificationFailed, setVerificationFailed] = React.useState(false);
     const [OTP, setOTP] = React.useState({OTP:'', inputOTP:""});
     const [msg, setmsg] = React.useState("");
+    const [displaySent, setDisplaySent] = React.useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -44,7 +45,11 @@ export default function Register() {
             .then(data => {
                 if (data.OTP){
                     setOTP({OTP: data.OTP,})
-                    setEmailVerify(true);
+                    setDisplaySent(true);
+                    const timer = setTimeout(() => {
+                        setEmailVerify(true);
+                    }, 3000);
+                    return () => clearTimeout(timer);
                 }else{
                     setEmailVerify(false);
                     setRegistrationFailed(true);
@@ -124,6 +129,9 @@ export default function Register() {
                             isDisabled={disabled}>Register</Button>
                     {registrationFailed === true && (
                         <Text color="red" mt={2} fontSize="large">Registration failed. Please retry.</Text> // Conditionally render the retry message
+                    )}
+                    {displaySent === true && (
+                        <Text color="green" mt={2} fontSize="large">Verification code sent. Check your email.</Text> // Conditionally render the retry message
                     )}
                     <Link href="/" color="teal.300" fontSize="medium" pt="3" textDecorationLine="underline">Back</Link>
 
