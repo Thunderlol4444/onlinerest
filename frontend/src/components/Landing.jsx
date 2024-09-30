@@ -74,7 +74,7 @@ export default function Landing() {
     return(
         <>
             <div className="logout">
-                <Button onClick={openPopup} size='small' fontSize="0.2em" colorScheme="#3498db" top="1vh" color="#666666">jan</Button>
+                <Button onClick={openPopup} size='small' fontSize="0.2em" colorScheme="#3498db" top="1vh" color="#666666">Easteregg</Button>
                 {isPopupOpen && <Popup onClose={closePopup}/>}
                 <Button className='logout-button' colorScheme="red" size="sm" onClick={setLogout}>Logout</Button>
                 <Redirect/>
@@ -108,7 +108,7 @@ export const Popup = ({onClose}) => {
     return (
         <div className="popup-container">
             <div className="popup">
-                {pwd === "1025" && <Text color="black" align="center">I love you dear</Text>}
+                {pwd === "1025" && <Text color="black" align="center">Congrats you won </Text>}
                 <br/>
                 <Input placeholder="pwd" size="xs" width="auto" value={pwd} onChange={handlepwd}
                        color="black" mb="5"></Input>

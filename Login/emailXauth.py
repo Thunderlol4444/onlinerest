@@ -16,7 +16,6 @@ SCOPES = ['https://mail.google.com/']
 USER_TOKENS = 'token.json'
 
 # application credentials
-CREDENTIALS = r'C:\Users\Thunder\Desktop\angkasax\github\localrest\credentials.json'
 
 
 def get_token() -> str:
@@ -33,7 +32,12 @@ def get_token() -> str:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS, SCOPES)
+            try:
+                CREDENTIALS = '/onlinerest/credentials.json'
+                flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS, SCOPES)
+            except FileNotFoundError:
+                CREDENTIALS = r"C:\Users\Thunder\Desktop\angkasax\github\onlinerest\credentials.json"
+                flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS, SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
         with open(USER_TOKENS, 'w') as token:

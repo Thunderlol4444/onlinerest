@@ -81,7 +81,7 @@ def register_user(user: models.UserCreate = Depends()):
                           "password": encrypted_password})
     return (JSONResponse(
             status_code=200,
-            content={"message": "user created successfully", "user": {"email": email}},
+            content={"message": "user created successfully"},
             headers={
                 "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
                 "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
