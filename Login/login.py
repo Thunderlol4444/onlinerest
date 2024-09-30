@@ -199,7 +199,12 @@ def get_users(request: Request, dependencies=Depends(JWTBearer()), tags=["Admin"
         users.append(user)
     return (JSONResponse(
             status_code=200,
-            content={users}))
+            content={users},
+            headers={
+                "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
+                "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type, Authorization",
+            }))
 
 
 @router.patch('/change-password')
