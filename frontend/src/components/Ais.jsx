@@ -34,7 +34,7 @@ export default function Ais() {
         //ais_data()
         ais_data_A()
 
-    }, []);
+    }, [responseData]);
 
     // var vesselCoordinates = responseData.map(function (item) {
     //     return({name: item[0], latitude: item[3], longitude: item[4]});
@@ -49,14 +49,15 @@ export default function Ais() {
     // console.log(vesselDetails)
 
     const vesselDetails = responseData.map(function (item){
-        return ({message_type: item[1], repeat_indicator: item[2], MMSI: item[3], navigation_status: status(item[4]),
-                rate_of_turn: item[5], speed_over_ground: item[6], position_accuracy: positionAccuracy(item[7]),
-                longitude: item[8], latitude: item[9], course_over_ground: item[10], true_heading: checkHeading(item[11]),
-                time_stamp: item[12], manoeuver_indicator: manoeuverIndicator(item[13]), spare: item[14],
-                RAIM_flag: RAIMFlag(item[15]), radio_status: item[16]
+        return ({message_type: item[5], repeat_indicator: item[11], MMSI: item[3], navigation_status: status(item[6]),
+                rate_of_turn: item[10], speed_over_ground: item[13], position_accuracy: positionAccuracy(item[7]),
+                longitude: item[2], latitude: item[1], course_over_ground: item[0], true_heading: checkHeading(item[15]),
+                time_stamp: item[14], manoeuver_indicator: manoeuverIndicator(item[4]), spare: item[12],
+                RAIM_flag: RAIMFlag(item[8]), radio_status: item[9]
         });
     })
 
+    console.log(vesselDetails);
 
     return (
         <div className="map-container">

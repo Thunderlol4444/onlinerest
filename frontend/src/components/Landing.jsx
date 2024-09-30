@@ -50,10 +50,10 @@ export default function Landing() {
                     return (
                         <tbody>
                             <tr>
-                                <th className="th">{item[0]}</th>
-                                <th className="th">{item[1]}</th>
                                 <th className="th">{item[2]}</th>
                                 <th className="th">{item[3]}</th>
+                                <th className="th">{item[0]}</th>
+                                <th className="th">{item[1]}</th>
                             </tr>
                         </tbody>)
                 })

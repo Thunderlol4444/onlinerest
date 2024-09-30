@@ -14,8 +14,10 @@ def ais_data(dependencies=Depends(JWTBearer())):
     data_list = directory.order_by_child("MMSI").get()
     data = []
     for data_point in data_list:
+        data_list = []
         for key, value in dict(data_point).items():
-            data.append(value)
+            data_list.append(value)
+        data.append(data_list)
     return data
 
 
@@ -26,6 +28,9 @@ def ais_data_a(dependencies=Depends(JWTBearer())):
     data_list = directory.order_by_child("MMSI").get()
     data = []
     for data_point in data_list:
+        data_list = []
         for key, value in dict(data_point).items():
-            data.append(value)
+            data_list.append(value)
+        data.append(data_list)
+    print(data)
     return data
