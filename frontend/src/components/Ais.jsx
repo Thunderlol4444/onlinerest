@@ -20,7 +20,7 @@ export default function Ais() {
 
 
     async function ais_data_A(){
-        const data = await fetch("https://onlinerest-1022384984816.asia-southeast1.run.app//ais_data_A",{
+        const data = await fetch("https://onlinerest-1022384984816.asia-southeast1.run.app/ais_data_A",{
             method: "get",
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("access_token")}`,},

@@ -32,16 +32,12 @@ app.include_router(getdata.router)
 origins = [
     "http://localhost:3000",
     "https://refined-density-297301.web.app",
-    "https://refined-density-297301.web.app/landing",
-    "https://refined-density-297301.web.app/register",
-    "https://refined-density-297301.web.app/logout",
-    "https://refined-density-297301.web.app/change-password"
 ]
 
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"]
