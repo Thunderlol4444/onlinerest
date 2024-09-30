@@ -34,7 +34,8 @@ origins = [
     "https://refined-density-297301.web.app",
     "https://refined-density-297301.web.app/landing",
     "https://refined-density-297301.web.app/register",
-    "https://refined-density-297301.web.app/logout"
+    "https://refined-density-297301.web.app/logout",
+    "https://refined-density-297301.web.app/change-password"
 ]
 
 
