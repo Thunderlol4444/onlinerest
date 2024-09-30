@@ -31,6 +31,7 @@ export default function Register() {
    const handleChange2 = (e) => {
         const { name, value } = e.target;
         setOTP(prevState => ({...prevState, [name]: value,}));
+        setVerificationFailed(false);
     }
 
     const handleSubmit = (e) => {
@@ -49,6 +50,7 @@ export default function Register() {
                     const timer = setTimeout(() => {
                         setEmailVerify(true);
                     }, 3000);
+                    setDisplaySent(false);
                     return () => clearTimeout(timer);
                 }else{
                     setEmailVerify(false);
@@ -60,7 +62,6 @@ export default function Register() {
     const handleSubmit2 = (e) => {
         e.preventDefault()
         if (OTP.OTP===OTP.inputOTP){
-            console.log(formData)
             const url = new URL("https://onlinerest-1022384984816.asia-southeast1.run.app/register");
             url.searchParams.append("username", formData.username);
             url.searchParams.append("email", formData.email);
