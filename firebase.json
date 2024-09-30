@@ -12,4 +12,13 @@
       ]
     }
   ]
+  "hosting": {
+    "rewrites": [ {
+      "source": "/onlinerest",
+      "run": {
+        "serviceId": "onlinerest",  // "service name" (from when you deployed the container image)
+        "region": "asia-southeast1"
+      }
+    } ]
+  }
 }

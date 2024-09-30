@@ -83,7 +83,9 @@ def register_user(user: models.UserCreate = Depends()):
             status_code=200,
             content={"message": "user created successfully", "user": {"email": email}},
             headers={
-                "Access-Control-Allow-Origin": "https://refined-density-297301.web.app"
+                "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
+                "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type, Authorization",
             }))
 
 
@@ -122,7 +124,9 @@ def register_email_verification(new_user: models.EmailVerification = Depends()):
             status_code=200,
             content={"message": "Verification sent", "OTP": f"{OTP}"},
             headers={
-                "Access-Control-Allow-Origin": "https://refined-density-297301.web.app"
+                "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
+                "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type, Authorization",
             }))
 
 
@@ -174,7 +178,9 @@ def login(request: models.RequestDetails = Depends()):
                         status_code=200,
                         content={"access_token": access, "refresh_token": refresh},
                         headers={
-                            "Access-Control-Allow-Origin": "https://refined-density-297301.web.app"
+                            "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
+                            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+                            "Access-Control-Allow-Headers": "Content-Type, Authorization",
                         }))
             else:
                 access = create_access_token(user_id)
@@ -186,7 +192,9 @@ def login(request: models.RequestDetails = Depends()):
                     content={"access_token": access, "refresh_token": refresh,
                              "message": "New refresh token generated"},
                     headers={
-                        "Access-Control-Allow-Origin": "https://refined-density-297301.web.app"
+                        "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
+                        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+                        "Access-Control-Allow-Headers": "Content-Type, Authorization",
                     }))
     access = create_access_token(user_id)
     refresh = create_refresh_token(user_id)
@@ -197,7 +205,9 @@ def login(request: models.RequestDetails = Depends()):
         status_code=200,
         content={"access_token": access, "refresh_token": refresh},
         headers={
-            "Access-Control-Allow-Origin": "https://refined-density-297301.web.app"
+            "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Authorization",
         }))
 
 
@@ -217,7 +227,9 @@ def get_users(request: Request, dependencies=Depends(JWTBearer()), tags=["Admin"
             status_code=200,
             content={users},
             headers={
-                "Access-Control-Allow-Origin": "https://refined-density-297301.web.app"
+                "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
+                "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type, Authorization",
             }))
 
 
@@ -236,7 +248,9 @@ def change_password(request: models.ChangePassword = Depends()):
         status_code=200,
         content={"message": "Password changed successfully"},
         headers={
-            "Access-Control-Allow-Origin": "https://refined-density-297301.web.app"
+            "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Authorization",
         }))
 
 
@@ -257,7 +271,7 @@ def logout(dependencies=Depends(JWTBearer())):
     if info:
         for i in range(len(info)):
             directory.child(info[i]).set("")
-    existing_token = directory.order_by_child("user_id").equal_to(user_id).get()
+    existing_token = directory.order_by_child("user_id").equal_to(int(user_id)).get()
     if existing_token:
         for key, value in dict(existing_token).items():
             directory.child(key).update({"status": 0})
@@ -265,5 +279,7 @@ def logout(dependencies=Depends(JWTBearer())):
         status_code=200,
         content={"message": "Logout Successfully"},
         headers={
-            "Access-Control-Allow-Origin": "https://refined-density-297301.web.app"
+            "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Authorization",
         }))

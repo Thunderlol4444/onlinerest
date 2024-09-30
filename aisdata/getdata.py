@@ -21,7 +21,9 @@ def ais_data(dependencies=Depends(JWTBearer())):
         status_code=200,
         content={data},
         headers={
-            "Access-Control-Allow-Origin": "https://refined-density-297301.web.app"
+            "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Authorization",
         }))
 
 
@@ -36,5 +38,7 @@ def ais_data_a(dependencies=Depends(JWTBearer())):
         status_code=200,
         content={data},
         headers={
-            "Access-Control-Allow-Origin": "https://refined-density-297301.web.app"
+            "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Authorization",
         }))
