@@ -1,12 +1,9 @@
 import random
 import os
 import signal
-import firebase_admin
-import json
 import datetime as date
 from functools import wraps
 from fastapi import Depends, HTTPException, status,  Response, APIRouter, Request
-from dependencies.database import get_database_connection
 from . import models
 from .utils import *
 from .auth_bearer import JWTBearer
@@ -29,7 +26,7 @@ def limited(request):
             return "This is a limited use API"
     except RateLimitExceeded as e:
         raise e
-    
+
 
 def token_required(func):
     @wraps(func)
