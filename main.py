@@ -31,9 +31,10 @@ app.include_router(getdata.router)
 
 origins = [
     "http://localhost:3000",
-    "localhost:3000",
     "https://refined-density-297301.web.app",
-    "refined-density-297301.firebaseapp.com"
+    "https://refined-density-297301.web.app/landing",
+    "https://refined-density-297301.web.app/register",
+    "https://refined-density-297301.web.app/logout"
 ]
 
 
