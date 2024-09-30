@@ -35,7 +35,7 @@ def token_required(func):
         directory = db.reference("")
         payload = jwt.decode(kwargs['dependencies'], JWT_SECRET_KEY, ALGORITHM)
         user_id = payload['sub']
-        user_data = directory.child("TokenTable").order_by_child("user_id").equal_to(user_id).get()
+        user_data = directory.child("TokenTable").order_by_child("user_id").equal_to(int(user_id)).get()
         access_token_list = [value["access_token"] for key, value in dict(user_data).items()]
         if access_token_list[0] == kwargs['dependencies']:
             return func(kwargs['dependencies'])
@@ -199,17 +199,11 @@ def get_users(request: Request, dependencies=Depends(JWTBearer()), tags=["Admin"
     users = []
     for key, value in dict(user_list).items():
         user = []
-        for itemKey, itemValue in value:
+        for itemKey, itemValue in dict(value).items():
             user.append(itemValue)
         users.append(user)
-    return (JSONResponse(
-            status_code=200,
-            content={users},
-            headers={
-                "Access-Control-Allow-Origin": "https://refined-density-297301.web.app",
-                "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-                "Access-Control-Allow-Headers": "Content-Type, Authorization",
-            }))
+    print(users)
+    return users
 
 
 @router.patch('/change-password')

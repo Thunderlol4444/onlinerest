@@ -62,7 +62,7 @@ export default function ChangePassword() {
             url.searchParams.append("email", formData.email);
             url.searchParams.append("new_password", formData.password)
             await fetch(url, {
-                method: "POST",
+                method: "PATCH",
                 headers: {"Content-Type": "application/json"},
             }).then((response) => response.json())
                 .then(data => {

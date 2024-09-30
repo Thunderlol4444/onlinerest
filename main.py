@@ -32,6 +32,7 @@ app.include_router(getdata.router)
 origins = [
     "http://localhost:3000",
     "https://refined-density-297301.web.app",
+    "https://onlinerest-1022384984816.asia-southeast1.run.app",
 ]
 
 
