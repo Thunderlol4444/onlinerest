@@ -23,7 +23,7 @@ const healthIcon = new Icon ({
 const shipIcon = new Icon({
     iconUrl: 'https://img.icons8.com/ios/100/battleship-top-view.png',
     iconSize: [38, 45], // size of the icon
-    iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
+    iconAnchor: [0, 0], // point of the icon which will correspond to marker's location
     popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
 })
 

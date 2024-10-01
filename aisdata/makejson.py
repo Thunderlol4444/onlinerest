@@ -12,9 +12,9 @@ def make_json(csvFilePath, jsonFilePath):
         label = list(csvReader.fieldnames)
         next(csvf)
         csvReader = csv.reader(csvf)
-        data_dict = {}
         stop = 0
         for row in csvReader:
+            data_dict = {}
             if stop == 1000:
                 break
             stop += 1
