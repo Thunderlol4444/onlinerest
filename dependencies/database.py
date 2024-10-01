@@ -33,8 +33,6 @@ def get_database_connection():
 def create_table():
     get_database_connection()
     directory = db.reference("")
-    # ref = parent_ref.child("tokentable")
-    # user_data = directory.child("TokenTable").order_by_child("user_id").equal_to(1).get()
     user_list = directory.child("Users").order_by_child("email").equal_to("jason").get()
     email = None
     password = None
@@ -46,17 +44,14 @@ def create_table():
     print(user_list)
     now = datetime.datetime.now()
     print(now)
-    # data_list = directory.child("Books").order_by_child("Price").get()
-    # data = [value for key, value in dict(data_list).items()]
-    # print(data)
     return {'message': 'Table created'}
 
 
-def insert_data(data):
+def insert_data():
     directory = db.reference("/AisData")
-    with open('AisDataA.json', 'r') as f:
+    with open(r'.\aisdata\data.json', 'r') as f:
         file_contents = json.load(f)
-    directory.push().set(file_contents)
+    directory.set(file_contents)
     return {'message': 'Data inserted'}
 
 

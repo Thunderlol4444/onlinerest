@@ -8,19 +8,10 @@ import 'leaflet-rotatedmarker'
 
 export default function Ais() {
     const [responseData, setData] = React.useState([]);
-    // async function ais_data(){
-    //     const data = await fetch("http://localhost:8000/ais_data",{
-    //         method: "get",
-    //         headers: {
-    //             "Authorization": `Bearer ${localStorage.getItem("access_token")}`,},
-    //     })
-    //     setData(await data.json());
-    //     // console.log(responseData);
-    // }
 
 
-    async function ais_data_A(){
-        const data = await fetch("https://onlinerest-1022384984816.asia-southeast1.run.app/ais_data_A",{
+    async function ais_data(){
+        const data = await fetch("https://onlinerest-1022384984816.asia-southeast1.run.app/ais_data",{
             method: "get",
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("access_token")}`,},
@@ -32,32 +23,32 @@ export default function Ais() {
 
     useEffect(() => {
         //ais_data()
-        ais_data_A()
+        ais_data().then()
 
     }, []);
 
-    // var vesselCoordinates = responseData.map(function (item) {
-    //     return({name: item[0], latitude: item[3], longitude: item[4]});
-    // })
-    // const vesselDetails = responseData.map(function(item){
-    //     return ({contact_number: item[1], time: item[2], latitude: item[3], longitude: item[4],
-    //         speed_over_ground: item[5], course_over_ground: item[6], heading: item[7], name: item[8],
-    //         international_maritime_organisation: item[9], callsign: item[10], type: vesselType(item[11]),
-    //         status: status(item[12]), length: item[13], width: item[14], draft: item[15], cargo: vesselType(item[16]),
-    //         transceiver: item[17]});
-    // })
-    // console.log(vesselDetails)
-
-    const vesselDetails = responseData.map(function (item){
-        return ({message_type: item[5], repeat_indicator: item[11], MMSI: item[3], navigation_status: status(item[6]),
-                rate_of_turn: item[10], speed_over_ground: item[13], position_accuracy: positionAccuracy(item[7]),
-                longitude: item[2], latitude: item[1], course_over_ground: item[0], true_heading: checkHeading(item[15]),
-                time_stamp: item[14], manoeuver_indicator: manoeuverIndicator(item[4]), spare: item[12],
-                RAIM_flag: RAIMFlag(item[8]), radio_status: item[9]
-        });
+    var vesselCoordinates = responseData.map(function (item) {
+        return({name: item[0], latitude: item[3], longitude: item[4]});
     })
+    const vesselDetails = responseData.map(function(item){
+        return ({MMSI: item[10], time: item[0], latitude: item[7], longitude: item[8],
+            speed_over_ground: item[11], course_over_ground: item[1], heading: item[5], name: item[14],
+            international_maritime_organisation: item[6], callsign: item[2], type: vesselType(item[15]),
+            status: status(item[12]), length: item[9], width: item[16], draft: item[4], cargo: vesselType(item[3]),
+            transceiver: item[13]});
+    })
+    console.log(vesselDetails)
 
-    console.log(vesselDetails);
+    // const vesselDetails = responseData.map(function (item){
+    //     return ({message_type: item[5], repeat_indicator: item[11], MMSI: item[3], navigation_status: status(item[6]),
+    //             rate_of_turn: item[10], speed_over_ground: item[13], position_accuracy: positionAccuracy(item[7]),
+    //             longitude: item[2], latitude: item[1], course_over_ground: item[0], true_heading: checkHeading(item[15]),
+    //             time_stamp: item[14], manoeuver_indicator: manoeuverIndicator(item[4]), spare: item[12],
+    //             RAIM_flag: RAIMFlag(item[8]), radio_status: item[9]
+    //     });
+    // })
+    //
+    // console.log(vesselDetails);
 
     return (
         <div className="map-container">
@@ -69,38 +60,38 @@ export default function Ais() {
                         key={index}
                         position={[vessel.latitude, vessel.longitude]}
                         icon={shipIcon}
-                        rotationAngle={Number(vessel.true_heading)-45}
+                        rotationAngle={Number(vessel.heading)-45}
                     >
                         <Popup>
-                            <b>Time stamp: {vessel.time_stamp} seconds</b><br/>
-                            <b>Message type: {vessel.message_type}</b><br/>
-                            <b>Navigation status: {vessel.repeat_indicator}</b><br/>
-                            <b>Rate of turn: {vessel.rate_of_turn} degrees/min</b><br/>
-                            <b>Speed over ground: {vessel.speed_over_ground} knots</b><br/>
-                            <b>Position accuracy: {vessel.repeat_indicator}</b><br/>
-                            <b>Longitude: {vessel.longitude} degrees</b><br/>
-                            <b>Latitude: {vessel.latitude} degrees</b><br/>
-                            <b>Course over ground: {vessel.course_over_ground} degrees</b><br/>
-                            <b>True heading: {(vessel.true_heading)} degrees</b><br/>
-                            <b>Manoeuver indicator: {vessel.manoeuver_indicator}</b><br/>
-                            <b>RAIM flag: {vessel.RAIM_flag}</b><br/>
-                            <b>Radio status: {vessel.radio_status}</b><br/>
-                            <em>MMSI: {vessel.MMSI}</em>
+                            {/*<b>Time stamp: {vessel.time_stamp} seconds</b><br/>*/}
+                            {/*<b>Message type: {vessel.message_type}</b><br/>*/}
+                            {/*<b>Navigation status: {vessel.repeat_indicator}</b><br/>*/}
+                            {/*<b>Rate of turn: {vessel.rate_of_turn} degrees/min</b><br/>*/}
+                            {/*<b>Speed over ground: {vessel.speed_over_ground} knots</b><br/>*/}
+                            {/*<b>Position accuracy: {vessel.repeat_indicator}</b><br/>*/}
+                            {/*<b>Longitude: {vessel.longitude} degrees</b><br/>*/}
+                            {/*<b>Latitude: {vessel.latitude} degrees</b><br/>*/}
+                            {/*<b>Course over ground: {vessel.course_over_ground} degrees</b><br/>*/}
+                            {/*<b>True heading: {(vessel.true_heading)} degrees</b><br/>*/}
+                            {/*<b>Manoeuver indicator: {vessel.manoeuver_indicator}</b><br/>*/}
+                            {/*<b>RAIM flag: {vessel.RAIM_flag}</b><br/>*/}
+                            {/*<b>Radio status: {vessel.radio_status}</b><br/>*/}
+                            {/*<em>MMSI: {vessel.MMSI}</em>*/}
                             {/*<b>Time: {vessel.time.slice(0,10)+' '+vessel.time.substring(11)}</b><br/>*/}
                             {/*<b>Name: {vessel.name}</b><br/>*/}
-                            {/*<b>SOG: {vessel.speed_over_ground} knots</b><br/>*/}
-                            {/*<b>COG: {vessel.course_over_ground} degrees</b><br/>*/}
-                            {/*<b>Heading: {vessel.heading} degrees</b><br/>*/}
-                            {/*<b>IMO: {vessel.international_maritime_organisation}</b><br/>*/}
-                            {/*<b>Callsign: {vessel.callsign}</b><br/>*/}
-                            {/*<b>Length: {vessel.length} meters</b><br/>*/}
-                            {/*<b>Width: {vessel.width} meters</b><br/>*/}
-                            {/*<b>Draft: {vessel.draft} meters</b><br/> /!*draft depth of vessel*!/*/}
-                            {/*<b>Type: {vessel.type}</b><br/>*/}
-                            {/*<b>Status: {vessel.status}</b><br/>*/}
-                            {/*<b>Cargo: {vessel.cargo}</b><br/>*/}
-                            {/*<b>Transceiver: {vessel.transceiver}</b><br/>*/}
-                            {/*<em>Contact Number: {vessel.contact_number}</em><br/> /!*Maritime Mobile Service identity value*!/*/}
+                            <b>SOG: {vessel.speed_over_ground} knots</b><br/>
+                            <b>COG: {vessel.course_over_ground} degrees</b><br/>
+                            <b>Heading: {vessel.heading} degrees</b><br/>
+                            <b>IMO: {vessel.international_maritime_organisation}</b><br/>
+                            <b>Callsign: {vessel.callsign}</b><br/>
+                            <b>Length: {vessel.length} meters</b><br/>
+                            <b>Width: {vessel.width} meters</b><br/>
+                            <b>Draft: {vessel.draft} meters</b><br/> {/*draft depth of vessel*/}
+                            <b>Type: {vessel.type}</b><br/>
+                            <b>Status: {vessel.status}</b><br/>
+                            <b>Cargo: {vessel.cargo}</b><br/>
+                            <b>Transceiver: {vessel.transceiver}</b><br/>
+                            <em>MMSI: {vessel.MMSI}</em><br/> {/*Maritime Mobile Service identity value*/}
                         </Popup>
                     </Marker>
                 ))}

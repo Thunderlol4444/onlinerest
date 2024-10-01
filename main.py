@@ -1,13 +1,9 @@
 from Login import login
 from aisdata import getdata
 from fastapi import FastAPI
-from dependencies.database import create_table
+from dependencies.database import create_table, insert_data
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
-import uvicorn
-import os
 firebaseConfig = {
   "apiKey": "AIzaSyC6XVvfqE8zEqT_kxNjaS478N1wkLQuyZk",
   "authDomain": "refined-density-297301.firebaseapp.com",
@@ -22,6 +18,7 @@ firebaseConfig = {
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     create_table()
+    insert_data()
     print("Connection established")
     yield
     print("Connection closed")
