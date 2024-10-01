@@ -10,7 +10,7 @@ router: APIRouter = APIRouter()
 @router.get("/ais_data")
 @token_required
 def ais_data(dependencies=Depends(JWTBearer())):
-    directory = db.reference("/ais_data")
+    directory = db.reference("/AisData")
     data_list = directory.order_by_child("MMSI").get()
     data = []
     for data_point in data_list:
