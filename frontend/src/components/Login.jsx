@@ -54,15 +54,6 @@ export default function Login() {
 
     return (
         <div className="App">
-            <!-- Google tag (gtag.js) -->
-            <script async src="https://www.googletagmanager.com/gtag/js?id=G-9GXBS8ZVCK"></script>
-            <script>
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-
-              gtag('config', 'G-9GXBS8ZVCK');
-            </script>
             <div className="App-header"><Text fontWeight="bold" pb="5">LOGIN</Text>
                 <form id="login" onSubmit={handleSubmit} className="form-group">
                     <label htmlFor="email" className="label-block">Email address:</label>

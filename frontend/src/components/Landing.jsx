@@ -49,15 +49,6 @@ export default function Landing() {
                 return datas.map(function (item) {
                     return (
                         <tbody>
-                        <!-- Google tag (gtag.js) -->
-                        <script async src="https://www.googletagmanager.com/gtag/js?id=G-9GXBS8ZVCK"></script>
-                        <script>
-                          window.dataLayer = window.dataLayer || [];
-                          function gtag(){dataLayer.push(arguments);}
-                          gtag('js', new Date());
-
-                          gtag('config', 'G-9GXBS8ZVCK');
-                        </script>
                             <tr>
                                 <th className="th">{item[2]}</th>
                                 <th className="th">{item[3]}</th>

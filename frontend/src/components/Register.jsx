@@ -105,15 +105,6 @@ export default function Register() {
     if (emailVerify === false){
         return (
             <div className="App">
-                <!-- Google tag (gtag.js) -->
-                <script async src="https://www.googletagmanager.com/gtag/js?id=G-9GXBS8ZVCK"></script>
-                <script>
-                  window.dataLayer = window.dataLayer || [];
-                  function gtag(){dataLayer.push(arguments);}
-                  gtag('js', new Date());
-
-                  gtag('config', 'G-9GXBS8ZVCK');
-                </script>
                 <div className="App-header"><Text fontWeight="bold" pb="5">NEW ACCOUNT</Text>
                     <form id="register" onSubmit={handleSubmit} className="form-group">
                         <label htmlFor="name" className="label-block" >Username:</label>
