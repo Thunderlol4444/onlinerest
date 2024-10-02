@@ -100,6 +100,15 @@ export default function ChangePassword() {
         return (
             <div className="form-change-password"><Text color="white" fontSize="xx-large" fontWeight="bold"
                                                         pb="5">Reset Password</Text>
+                <!-- Google tag (gtag.js) -->
+                <script async src="https://www.googletagmanager.com/gtag/js?id=G-9GXBS8ZVCK"></script>
+                <script>
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+
+                  gtag('config', 'G-9GXBS8ZVCK');
+                </script>
                 <form id="change_password" onSubmit={handleSubmit} className="form-group">
                     <label htmlFor="name" className="label-block">Username:</label>
                     <input type="name" className="form-control" id="username" onChange={handleChange}
