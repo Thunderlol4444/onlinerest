@@ -1,5 +1,5 @@
 import logo from './logo.svg';
-import React from "react";
+import React, {useEffect} from "react";
 import './App.css';
 import Login from "./components/Login";
 import Landing from "./components/Landing";
@@ -8,10 +8,17 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Logout from "./components/Logout";
 import Register from "./components/Register";
 import ChangePassword from "./components/ChangePassword";
+import TagManager from 'react-gtm-module';
 
 export const access_token_context = React.createContext("")
 
 function App() {
+    useEffect(() => {
+       const tagManagerArgs = {
+           gtmId: 'GTM-N4PXHKM9'
+       };
+       TagManager.initialize(tagManagerArgs);
+    }, []);
     const [access_token, setToken] = React.useState("")
     return (
         <access_token_context.Provider value={{access_token, setToken}}>
