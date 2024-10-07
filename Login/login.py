@@ -1,4 +1,5 @@
 import os
+import random
 import signal
 import datetime as date
 from functools import wraps
@@ -90,6 +91,7 @@ def register_user(user: models.UserCreate = Depends()):
 
 @router.post("/register/email_verification")
 def register_email_verification(new_user: models.EmailVerification = Depends()):
+    OTP = random.randint(1000, 9999)
     host = "smtp.gmail.com"
     port = 587
     user = "jasonsimsamsung@gmail.com"
