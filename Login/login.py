@@ -219,7 +219,7 @@ def logout(dependencies=Depends(JWTBearer())):
     print(tuple(info))
     if info:
         for i in range(len(info)):
-            directory.child(info[i]).set("")
+            directory.child(info[i]).set(None)
     existing_token = directory.order_by_child("user_id").equal_to(int(user_id)).get()
     if existing_token:
         for key, value in dict(existing_token).items():
