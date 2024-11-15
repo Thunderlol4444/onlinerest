@@ -9,7 +9,7 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 
-# If modifying these scopes, delete the file token.json.
+# If modifying these scopes, delete the file old_token.json.
 SCOPES = ['https://mail.google.com/']
 
 # user token storage
@@ -21,22 +21,27 @@ USER_TOKENS = 'token.json'
 def get_token() -> str:
     creds = None
 
-    # The file token.json stores the user's access and refresh tokens, and is
+    # The file old_token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
     if os.path.exists(USER_TOKENS):
         creds = Credentials.from_authorized_user_file(USER_TOKENS, SCOPES)
-        creds.refresh(Request())
+        try:
+            creds.refresh(Request())
+        except Exception as e:
+            print(f"Error refreshing token: {e}")
+            os.remove(USER_TOKENS)  # Delete invalid token and reauthenticate
+            return get_token()
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
             try:
-                CREDENTIALS = '/onlinerest/credentials.json'
+                CREDENTIALS = '/onlinerest/old_credentials.json'
                 flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS, SCOPES)
             except FileNotFoundError:
-                CREDENTIALS = r"C:\Users\Thunder\Desktop\angkasax\github\onlinerest\credentials.json"
+                CREDENTIALS = r"C:\Users\Thunder\Desktop\angkasax\github\onlinerest\old_credentials.json"
                 flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS, SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
@@ -59,6 +64,7 @@ def send_email(host, port, subject, msg, sender, recipients):
     msg['Subject'] = subject
     msg['From'] = sender
     msg['To'] = ', '.join(recipients)
+    print(msg.as_string())
 
     server = smtplib.SMTP(host, port)
     server.starttls()
